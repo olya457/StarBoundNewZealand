@@ -17,6 +17,7 @@ type Props = {
   onTogglePlace: (id: string) => void;
   onRemovePlace: (id: string) => void;
   onToggleArticle: (id: string) => void;
+  onRemoveArticle: (id: string) => void;
 };
 
 const tabLabels: Record<TabKey, string> = {
@@ -33,6 +34,7 @@ export function AppNavigator({
   onTogglePlace,
   onRemovePlace,
   onToggleArticle,
+  onRemoveArticle,
 }: Props) {
   const [activeTab, setActiveTab] = useState<TabKey>('routes');
   const [target, setTarget] = useState<MainTarget>({
@@ -91,6 +93,7 @@ export function AppNavigator({
         <ArticleScreen
           article={article}
           saved={savedArticleIds.includes(article.id)}
+          activeTitle={tabLabels[target.from]}
           onBack={goBack}
           onToggleSaved={() => onToggleArticle(article.id)}
         />
@@ -122,8 +125,11 @@ export function AppNavigator({
       return (
         <SavedScreen
           savedIds={savedPlaceIds}
+          savedArticleIds={savedArticleIds}
           onOpenPlace={openPlace}
+          onOpenArticle={openArticle}
           onRemove={onRemovePlace}
+          onRemoveArticle={onRemoveArticle}
           onOpenRoutes={() => openTab('routes')}
           onOpenMap={() => openTab('map')}
         />

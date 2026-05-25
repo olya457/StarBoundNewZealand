@@ -75,7 +75,9 @@ export function OnboardingScreen({onDone}: Props) {
       return;
     }
 
-    listRef.current?.scrollToIndex({index: index + 1});
+    const nextIndex = index + 1;
+    setIndex(nextIndex);
+    listRef.current?.scrollToIndex({index: nextIndex, animated: true});
   };
 
   return (
@@ -86,6 +88,7 @@ export function OnboardingScreen({onDone}: Props) {
         keyExtractor={item => item.key}
         horizontal
         pagingEnabled
+        scrollEnabled={false}
         bounces={false}
         showsHorizontalScrollIndicator={false}
         onMomentumScrollEnd={onScrollEnd}

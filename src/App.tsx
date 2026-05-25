@@ -38,6 +38,7 @@ export default function App() {
       onTogglePlace={savedPlaces.toggle}
       onRemovePlace={savedPlaces.remove}
       onToggleArticle={savedArticles.toggle}
+      onRemoveArticle={savedArticles.remove}
     />
   );
 }

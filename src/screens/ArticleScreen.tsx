@@ -8,11 +8,18 @@ import type {Article} from '../types';
 type Props = {
   article: Article;
   saved: boolean;
+  activeTitle: string;
   onBack: () => void;
   onToggleSaved: () => void;
 };
 
-export function ArticleScreen({article, saved, onBack, onToggleSaved}: Props) {
+export function ArticleScreen({
+  article,
+  saved,
+  activeTitle,
+  onBack,
+  onToggleSaved,
+}: Props) {
   const shareArticle = () => {
     Share.share({
       title: article.title,
@@ -23,7 +30,7 @@ export function ArticleScreen({article, saved, onBack, onToggleSaved}: Props) {
   return (
     <Screen>
       <Pressable onPress={onBack} style={styles.backButton}>
-        <Text style={styles.backText}>← Notes</Text>
+        <Text style={styles.backText}>← {activeTitle}</Text>
       </Pressable>
       <Text style={styles.title}>{article.title}</Text>
       <Text style={styles.subtitle}>{article.subtitle}</Text>

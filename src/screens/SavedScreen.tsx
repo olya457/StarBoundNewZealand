@@ -1,24 +1,31 @@
 import React, {useMemo} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import {AppButton} from '../components/AppButton';
 import {Header} from '../components/Header';
 import {PlaceCard} from '../components/PlaceCard';
 import {Screen} from '../components/Screen';
+import {articleById} from '../data/articles';
 import {placeById} from '../data/places';
 import {colors, typography} from '../theme';
 
 type Props = {
   savedIds: string[];
+  savedArticleIds: string[];
   onOpenPlace: (id: string) => void;
+  onOpenArticle: (id: string) => void;
   onRemove: (id: string) => void;
+  onRemoveArticle: (id: string) => void;
   onOpenRoutes: () => void;
   onOpenMap: () => void;
 };
 
 export function SavedScreen({
   savedIds,
+  savedArticleIds,
   onOpenPlace,
+  onOpenArticle,
   onRemove,
+  onRemoveArticle,
   onOpenRoutes,
   onOpenMap,
 }: Props) {
@@ -30,14 +37,26 @@ export function SavedScreen({
     [savedIds],
   );
 
+  const savedArticles = useMemo(
+    () =>
+      savedArticleIds
+        .map(id => articleById[id])
+        .filter(
+          (article): article is NonNullable<typeof article> => Boolean(article),
+        ),
+    [savedArticleIds],
+  );
+
+  const savedCount = savedPlaces.length + savedArticles.length;
+
   return (
     <Screen>
       <Header
         eyebrow="COLLECTION"
         title="Saved Stars"
-        subtitle="Your collected New Zealand routes"
+        subtitle="Your collected New Zealand routes and stories"
       />
-      {savedPlaces.length === 0 ? (
+      {savedCount === 0 ? (
         <View style={styles.empty}>
           <View style={styles.starCircle}>
             <Text style={styles.star}>☆</Text>
@@ -61,9 +80,14 @@ export function SavedScreen({
             </View>
             <Text style={styles.counterText}>
               {savedPlaces.length}{' '}
-              {savedPlaces.length === 1 ? 'location' : 'locations'} saved
+              {savedPlaces.length === 1 ? 'location' : 'locations'} and{' '}
+              {savedArticles.length}{' '}
+              {savedArticles.length === 1 ? 'story' : 'stories'} saved
             </Text>
           </View>
+          {savedPlaces.length > 0 ? (
+            <Text style={styles.sectionTitle}>Saved Locations</Text>
+          ) : null}
           {savedPlaces.map(place => (
             <PlaceCard
               key={place.id}
@@ -75,6 +99,41 @@ export function SavedScreen({
               onRemove={() => onRemove(place.id)}
               onMap={onOpenMap}
             />
+          ))}
+          {savedArticles.length > 0 ? (
+            <Text style={styles.sectionTitle}>Saved Stories</Text>
+          ) : null}
+          {savedArticles.map(article => (
+            <View key={article.id} style={styles.articleCard}>
+              <Pressable
+                onPress={() => onRemoveArticle(article.id)}
+                style={styles.removeButton}>
+                <Text style={styles.removeText}>🗑</Text>
+              </Pressable>
+              <View style={styles.articleBadge}>
+                <Text style={styles.articleBadgeText}>Story</Text>
+              </View>
+              <Text numberOfLines={2} style={styles.articleTitle}>
+                {article.title}
+              </Text>
+              <Text numberOfLines={2} style={styles.articleSubtitle}>
+                {article.subtitle}
+              </Text>
+              <View style={styles.articleActions}>
+                <AppButton
+                  label="Read Article"
+                  onPress={() => onOpenArticle(article.id)}
+                  style={styles.articleRead}
+                />
+                <AppButton
+                  label="Remove"
+                  emoji="🔖"
+                  variant="dark"
+                  onPress={() => onRemoveArticle(article.id)}
+                  style={styles.articleRemove}
+                />
+              </View>
+            </View>
           ))}
         </>
       )}
@@ -143,5 +202,74 @@ const styles = StyleSheet.create({
     color: colors.muted,
     fontSize: typography.body,
     lineHeight: 20,
+  },
+  sectionTitle: {
+    color: colors.text,
+    fontSize: 17,
+    lineHeight: 22,
+    fontWeight: '900',
+    marginTop: 4,
+    marginBottom: 12,
+  },
+  articleCard: {
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: colors.panel,
+    padding: 16,
+    marginBottom: 16,
+  },
+  removeButton: {
+    position: 'absolute',
+    top: 14,
+    right: 14,
+    width: 34,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: colors.panelSoft,
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 2,
+  },
+  removeText: {
+    fontSize: 15,
+  },
+  articleBadge: {
+    alignSelf: 'flex-start',
+    borderRadius: 12,
+    backgroundColor: colors.yellowSoft,
+    paddingHorizontal: 11,
+    paddingVertical: 6,
+    marginBottom: 14,
+  },
+  articleBadgeText: {
+    color: colors.yellow,
+    fontSize: 11,
+    lineHeight: 13,
+    fontWeight: '900',
+  },
+  articleTitle: {
+    color: colors.text,
+    fontSize: 17,
+    lineHeight: 22,
+    fontWeight: '900',
+    paddingRight: 38,
+  },
+  articleSubtitle: {
+    color: colors.muted,
+    fontSize: typography.body,
+    lineHeight: 22,
+    marginTop: 8,
+  },
+  articleActions: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 18,
+  },
+  articleRead: {
+    flex: 1.2,
+  },
+  articleRemove: {
+    flex: 0.8,
   },
 });
