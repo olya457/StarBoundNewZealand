@@ -1,4 +1,4 @@
-package com.star.bound.newzealand
+package com.starnightsnewzealand
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

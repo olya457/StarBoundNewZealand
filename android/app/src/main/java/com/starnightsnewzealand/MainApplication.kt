@@ -1,4 +1,4 @@
-package com.star.bound.newzealand
+package com.starnightsnewzealand
 
 import android.app.Application
 import com.facebook.react.PackageList
