@@ -14,7 +14,6 @@ type Props = {
   savedIds: string[];
   onToggleSaved: (id: string) => void;
   onOpenPlace: (id: string) => void;
-  onOpenMap: () => void;
 };
 
 export function RoutesScreen({savedIds, onToggleSaved, onOpenPlace}: Props) {

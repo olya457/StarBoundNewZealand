@@ -78,6 +78,7 @@ export function AppNavigator({
           activeTitle={tabLabels[target.from]}
           onBack={goBack}
           onToggleSaved={() => onTogglePlace(place.id)}
+          onOpenMap={() => openTab('map')}
         />
       );
     }
@@ -145,7 +146,6 @@ export function AppNavigator({
         savedIds={savedPlaceIds}
         onToggleSaved={onTogglePlace}
         onOpenPlace={openPlace}
-        onOpenMap={() => openTab('map')}
       />
     );
   })();

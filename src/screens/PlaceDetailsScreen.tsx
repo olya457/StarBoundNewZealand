@@ -1,8 +1,6 @@
 import React from 'react';
 import {
   ImageBackground,
-  Linking,
-  Platform,
   Share,
   StyleSheet,
   Text,
@@ -22,6 +20,7 @@ type Props = {
   activeTitle: string;
   onBack: () => void;
   onToggleSaved: () => void;
+  onOpenMap: () => void;
 };
 
 export function PlaceDetailsScreen({
@@ -30,21 +29,11 @@ export function PlaceDetailsScreen({
   activeTitle,
   onBack,
   onToggleSaved,
+  onOpenMap,
 }: Props) {
   const color = categories.find(
     category => category.id === place.categoryId,
   )?.color;
-
-  const openMap = () => {
-    const {latitude, longitude} = place.coordinates;
-    const label = encodeURIComponent(place.name);
-    const url =
-      Platform.OS === 'ios'
-        ? `http://maps.apple.com/?ll=${latitude},${longitude}&q=${label}`
-        : `geo:${latitude},${longitude}?q=${latitude},${longitude}(${label})`;
-
-    Linking.openURL(url).catch(() => undefined);
-  };
 
   const sharePlace = () => {
     Share.share({
@@ -80,7 +69,7 @@ export function PlaceDetailsScreen({
             label="Open on Map"
             emoji="📍"
             variant="dark"
-            onPress={openMap}
+            onPress={onOpenMap}
             style={styles.action}
           />
           <AppButton
